@@ -23,10 +23,15 @@ inputs:
     description: Shell to execute commands. Defaults to "/bin/sh".
     required: false
     default: /bin/sh
+  timestamps:
+    description: |
+      Include timestamps in the log output. Defaults to false.
+    required: false
+    default: "false"
 
 runs:
   using: node20
-  main: 'dist/index.js'
+  main: "dist/index.js"
 branding:
   icon: align-left
   color: blue

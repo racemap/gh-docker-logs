@@ -68,10 +68,16 @@ export function filterContainers(
 
 export function getLogsFromContainer(
     containerId: string,
-    options: { tail?: boolean; filename?: string }
+    options: { tail?: string; filename?: string, timestamps?: boolean }
 ) {
-    const { tail, filename } = options;
-    const logsOptions = tail ? `--tail ${tail} ` : '';
+    const { tail, filename, timestamps } = options;
+    let logsOptions = '';
+    if (tail) {
+        logsOptions += `--tail ${tail} `;
+    }
+    if (timestamps) {
+        logsOptions += `--timestamps `;
+    }
 
     let out: number | undefined;
     if (filename) {

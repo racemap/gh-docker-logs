@@ -6,6 +6,7 @@ import { filterContainers, getContainers, getLogsFromContainer } from './lib';
 const dest = core.getInput('dest') || undefined;
 const images = core.getInput('images') || undefined;
 const tail = core.getInput('tail');
+const timestamps = core.getInput('timestamps') === 'true';
 const shell = core.getInput('shell');
 
 const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
@@ -32,12 +33,12 @@ for (const container of filteredContainers) {
         console.log(`* Status: ${container.status}`);
         console.log('**********************************************************************');
 
-        getLogsFromContainer(container.id, { tail: !!tail });
+        getLogsFromContainer(container.id, { tail, timestamps });
         console.log(`::endgroup::`);
     } else {
         const logFile = `${container.name.replace(/[/:]/g, '-')}.log`;
         const filename = path.resolve(dest, logFile);
         console.log(`Writing ${filename}`);
-        getLogsFromContainer(container.id, { tail: !!tail, filename });
+        getLogsFromContainer(container.id, { tail, timestamps, filename });
     }
 }
