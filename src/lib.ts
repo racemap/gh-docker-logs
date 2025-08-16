@@ -68,7 +68,7 @@ export function filterContainers(
 
 export function getLogsFromContainer(
     containerId: string,
-    options: { tail?: string; filename?: string, timestamps?: boolean }
+    options: { tail?: string; filename?: string; timestamps?: boolean }
 ) {
     const { tail, filename, timestamps } = options;
     let logsOptions = '';

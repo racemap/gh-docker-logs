@@ -24,7 +24,7 @@ if (imagesFilter) {
 }
 console.log('\n');
 
-console.log("Options:")
+console.log('Options:');
 console.log(`* dest      : ${dest}`);
 console.log(`* images    : ${images}`);
 console.log(`* tail      : ${tail}`);

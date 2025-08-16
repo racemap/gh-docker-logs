@@ -51,12 +51,19 @@ function filterContainers(containers, imagesFilter) {
 }
 exports.filterContainers = filterContainers;
 function getLogsFromContainer(containerId, options) {
-    const { tail, filename } = options;
-    const logsOptions = tail ? `--tail ${tail} ` : '';
+    const { tail, filename, timestamps } = options;
+    let logsOptions = '';
+    if (tail) {
+        logsOptions += `--tail ${tail} `;
+    }
+    if (timestamps) {
+        logsOptions += `--timestamps `;
+    }
     let out;
     if (filename) {
         out = fs_1.default.openSync(filename, 'w');
     }
+    console.log(`DEBUG "docker logs ${logsOptions} ${containerId}"`);
     run(`docker logs ${logsOptions} ${containerId}`, {
         passthrough: !options.filename,
         out,
@@ -109,6 +116,7 @@ const lib_1 = __nccwpck_require__(7223);
 const dest = core.getInput('dest') || undefined;
 const images = core.getInput('images') || undefined;
 const tail = core.getInput('tail');
+const timestamps = core.getInput('timestamps') === 'true';
 const shell = core.getInput('shell');
 const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
 if (dest) {
@@ -121,6 +129,12 @@ if (imagesFilter) {
     console.log(`Found ${filteredContainers.length} matching containers...`);
 }
 console.log('\n');
+console.log('Options:');
+console.log(`* dest      : ${dest}`);
+console.log(`* images    : ${images}`);
+console.log(`* tail      : ${tail}`);
+console.log(`* timestamps: ${timestamps}`);
+console.log(`* shell     : ${shell}`);
 for (const container of filteredContainers) {
     if (!dest) {
         console.log(`::group::${container.image} (${container.name})`);
@@ -129,14 +143,14 @@ for (const container of filteredContainers) {
         console.log(`* Image : ${container.image}`);
         console.log(`* Status: ${container.status}`);
         console.log('**********************************************************************');
-        (0, lib_1.getLogsFromContainer)(container.id, { tail: !!tail });
+        (0, lib_1.getLogsFromContainer)(container.id, { tail, timestamps });
         console.log(`::endgroup::`);
     }
     else {
         const logFile = `${container.name.replace(/[/:]/g, '-')}.log`;
         const filename = path_1.default.resolve(dest, logFile);
         console.log(`Writing ${filename}`);
-        (0, lib_1.getLogsFromContainer)(container.id, { tail: !!tail, filename });
+        (0, lib_1.getLogsFromContainer)(container.id, { tail, timestamps, filename });
     }
 }
 
