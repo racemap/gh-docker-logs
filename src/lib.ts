@@ -84,6 +84,7 @@ export function getLogsFromContainer(
         out = fs.openSync(filename, 'w');
     }
 
+    console.log(`DEBUG "docker logs ${logsOptions} ${containerId}"`);
     run(`docker logs ${logsOptions} ${containerId}`, {
         passthrough: !options.filename,
         out,

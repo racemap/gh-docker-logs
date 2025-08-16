@@ -24,6 +24,13 @@ if (imagesFilter) {
 }
 console.log('\n');
 
+console.log("Options:")
+console.log(`* dest      : ${dest}`);
+console.log(`* images    : ${images}`);
+console.log(`* tail      : ${tail}`);
+console.log(`* timestamps: ${timestamps}`);
+console.log(`* shell     : ${shell}`);
+
 for (const container of filteredContainers) {
     if (!dest) {
         console.log(`::group::${container.image} (${container.name})`);
